@@ -6,9 +6,10 @@ from Player import Player
 # Bare minimum test game. See README.md for details.
 
 if __name__ == '__main__':
-    #players = [Pushover(), Freeloader(), Alternator(), MaxRepHunter(), Random(.2), Random(.8), Dignified(), Hungry(), FairHunter(), Vain()]
-    players = [Freeloader(), MaxRepHunter(), Random(.2), Dignified(), Hungry(), FairHunter(), Hungry(), Vain(), BecomesCorrupt(), BecomesCorruptFast(), BecomesCorruptSlow()]
-    #players = [Freeloader(), Hungry()]
-    game = Game(players)
-    game = Game(players)
-    game.play_game()
+	randomHunters = [Random(i/10) for i in range(1, 10)]
+	corrupters = [BecomesCorrupt(i) for i in range(1, 300)]
+	boundedHunters =[BoundedHunter(i/10, j/10) for i in range(1,10) for j in range(1,10) if i < j]
+	players = [Hunter(), Slacker(), AlternateHunter(), AlternateSlacker(), MaxRepHunter(), AverageHunter(), Dignified(), Hungry(), FairHunter(), Vain()]
+	players = players + randomHunters + corrupters + boundedHunters
+	game = Game(players)
+	game.play_game()
