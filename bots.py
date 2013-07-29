@@ -39,7 +39,7 @@ class Slacker(BasePlayer):
 class AlternateHunter(BasePlayer):
     '''Player that alternates between hunting and slacking.'''
     def __init__(self):
-        self.name = "AlternatorHunter"
+        self.name = "AlternateHunter"
         
     def hunt_choices(
                     self,
@@ -60,7 +60,7 @@ class AlternateHunter(BasePlayer):
 class AlternateSlacker(BasePlayer):
     '''Player that alternates between hunting and slacking.'''
     def __init__(self):
-        self.name = "AlternatorSlacker"
+        self.name = "AlternateSlacker"
         
     def hunt_choices(
                     self,
@@ -256,8 +256,7 @@ class Vain(BasePlayer):
 ##########################################################################################
 
 class BecomesCorrupt(BasePlayer):
-    """Player that starts by always hunting, then gradually becomes more
-    likely to slack"""
+    """Player that starts by always hunting, then becomes more likely to slack"""
 
     def __init__(self, corruptionRound):
         self.name = "BecomesCorrupt" + str(corruptionRound)
@@ -271,6 +270,31 @@ class BecomesCorrupt(BasePlayer):
                     player_reputations
                     ):
         p_hunt = max((1.0 - round_number / self.corrupt),0.0)
+        hunt_decisions = list()
+        for reputation in player_reputations:
+            if random.random() < p_hunt:
+                hunt_decisions.append('h')
+            else:
+                hunt_decisions.append('s')
+        return hunt_decisions
+
+class MoreCorrupt(BasePlayer):
+    """Players that starts some probability of hunting, then becomes more likely to slack"""
+
+    def __init__(self, pHunt, corruptionRound):
+        self.name = "MoreCorrupt" + str(pHunt) + "-" +  str(corruptionRound)
+        self.corrupt = corruptionRound
+        self.pHunt = pHunt
+
+    def hunt_choices(
+                    self,
+                    round_number,
+                    current_food,
+                    current_reputation,
+                    m,
+                    player_reputations
+                    ):
+        p_hunt = max((self.pHunt - round_number / self.corrupt),0.0)
         hunt_decisions = list()
         for reputation in player_reputations:
             if random.random() < p_hunt:
