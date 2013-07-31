@@ -105,6 +105,22 @@ class Random(BasePlayer):
 ##                                UTILITY(ref) BOTS                                     ##
 ##########################################################################################
 
+class BalancedHunter(BasePlayer):
+    '''Player that hunts with 1 - m of the player for each hunt'''
+    def __init__(self):
+        self.name = "BalancedHunter"
+
+    def hunt_choices(
+                    self,
+                    round_number,
+                    current_food,
+                    current_reputation,
+                    m,
+                    player_reputations,
+                    ):
+        return ['h' if random.random() < 1 - rep else 's' for rep in player_reputations]
+
+
 class MaxRepHunter(BasePlayer):
     '''Player that hunts only with people with max reputation.'''
     def __init__(self):

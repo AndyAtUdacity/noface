@@ -8,10 +8,10 @@ from Player import Player
 
 if __name__ == '__main__':
 	randomHunters = [Random(i/10) for i in range(1, 10)]
-	corrupters = [BecomesCorrupt(i) for i in range(1, 300)]
-	moreCorrupters = [MoreCorrupt(p/10, day) for p in range(1,10) for day in range (1, 300)]
+	corrupters = [BecomesCorrupt(i) for i in range(1, 300, 5)]
+	moreCorrupters = [MoreCorrupt(p/10, day) for p in range(1,10) for day in range (1, 300, 10)]
 	boundedHunters =[BoundedHunter(i/10, j/10) for i in range(1,10) for j in range(1,10) if i < j]
-	players = [Hunter(), Slacker(), AlternateHunter(), AlternateSlacker(), MaxRepHunter(), AverageHunter(), Dignified(), Hungry(), FairHunter(), Vain()]
-	players = players + randomHunters + corrupters + boundedHunters + moreCorrupters
+	players = [BalancedHunter(), Hunter(), Slacker(), AlternateHunter(), AlternateSlacker(), MaxRepHunter(), AverageHunter(), Dignified(), Hungry(), FairHunter(), Vain()]
+	players = players*10 + randomHunters + corrupters + boundedHunters + moreCorrupters
 	game = Game(players)
 	game.play_game()
