@@ -68,8 +68,8 @@ def update_hunt_with_me_ratio(food_earnings):
 			num_slacks += 1
 		else:
 			raise ValueError
-	CURRENT_HUNT_WITH_ME_RATIO = num_hunts / (num_hunts + num_slacks)
-	HUNT_WITH_ME_RATIO_HISTORY.append(CURRENT_HUNT_WITH_ME_RATIO)
+	global CURRENT_HUNT_WITH_ME_RATIO = num_hunts / (num_hunts + num_slacks)
+	global HUNT_WITH_ME_RATIO_HISTORY.append(CURRENT_HUNT_WITH_ME_RATIO)
 
 def update_persuasion():
 	"""Updates current persuasion and history"""
@@ -99,20 +99,29 @@ def update_globals_beginning_of_round(round_number,
 def update_globals_round_end(award, m, number_hunters):
 	"""Updates the global variables that depend on the information passed to round_end()"""
 	hunt_opportunities = CURRENT_NUM_PLAYERS * (CURRENT_NUM_PLAYERS - 1)
-	TRUE_CURRENT_AVG_REPUTATION = number_hunters / hunt_opportunities
-	TRUE_AVG_REPUTATION_HISTORY.append(TRUE_CURRENT_AVG_REPUTATION)
+	global TRUE_CURRENT_AVG_REPUTATION = number_hunters / hunt_opportunities
+	global TRUE_AVG_REPUTATION_HISTORY.append(TRUE_CURRENT_AVG_REPUTATION)
 	if HUNT_OUTCOMES_CALLED: 
 		update_persuasion()
-		IS_FIRST_ROUND = False #this would be the last thing called in this round
+		global IS_FIRST_ROUND = False #this would be the last thing called in this round
+	pass
+
+def update_globals_hunt_outcomes(food_earnings):
+	"""Updates the global variables that depend on the information passed to hunt_outcomes()"""
+	global HUNT_OUTCOME_HISTORY.append(food_earnings)
+	update_hunt_with_me_ratio(food_earnings)
+	if ROUND_END_CALLED:
+		update_persuasion()
+		global IS_FIRST_ROUND = False #this would be the last thing called in this round
 	pass
 
 def hunt_outcomes(food_earnings):
-	HUNT_OUTCOMES_CALLED = True
+	global HUNT_OUTCOMES_CALLED = True
 	update_globals_hunt_outcomes(food_earnings)
 	pass
 
 def round_end(award, m, number_hunters):
-	ROUND_END_CALLED = True
+	global ROUND_END_CALLED = True
 	update_globals_round_end(award, m, number_hunters)
 	pass
 
@@ -126,14 +135,7 @@ def round_end(award, m, number_hunters):
 
 
 
-def update_globals_hunt_outcomes(food_earnings):
-	"""Updates the global variables that depend on the information passed to hunt_outcomes()"""
-	HUNT_OUTCOME_HISTORY.append(food_earnings)
-	update_hunt_with_me_ratio(food_earnings)
-	if ROUND_END_CALLED:
-		update_persuasion()
-		IS_FIRST_ROUND = False #this would be the last thing called in this round
-	pass
+
 
 def compare_reputation(current_reputation, current_avg_rep, current_rep_std):
 	"""Classifies my player on a scale of very lazy (negative numbers) to very hardworking,
